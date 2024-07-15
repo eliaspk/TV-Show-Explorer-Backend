@@ -26,8 +26,10 @@ functions:
     handler: src/lambdas/cognito/preSignup.handler
     events:
       - cognitoUserPool:
-          pool: tv-explorer-pool-${self:provider.stage}-1
+          pool: tv-explorer-pool-${self:provider.stage}
           trigger: PreSignUp
+          existing: true
+          forceDeploy: true
 
   # Shows
   discoverShows:
@@ -152,4 +154,4 @@ resources:
           RestApiId: !Ref ApiGatewayRestApi
           Type: COGNITO_USER_POOLS
           ProviderARNs:
-            - !GetAtt TVExplorerCognitoUserPool1.Arn
+            - !GetAtt CognitoUserPool.Arn

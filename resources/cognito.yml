@@ -1,8 +1,8 @@
 Resources:
-  TVExplorerCognitoUserPool1:
+  CognitoUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
-      UserPoolName: tv-explorer-pool-${self:provider.stage}-1
+      UserPoolName: tv-explorer-pool-${self:provider.stage}
       UsernameAttributes:
         - email
       AutoVerifiedAttributes:
@@ -15,12 +15,12 @@ Resources:
           RequireNumbers: false
           RequireSymbols: false
 
-  TVExplorerCognitoUserPoolClient1:
+  CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
-      ClientName: tv-explorer-pool-${self:provider.stage}-client-1
+      ClientName: tv-explorer-pool-${self:provider.stage}-client
       UserPoolId:
-        Ref: TVExplorerCognitoUserPool1
+        Ref: CognitoUserPool
       ExplicitAuthFlows:
         - ALLOW_REFRESH_TOKEN_AUTH
         - ALLOW_USER_PASSWORD_AUTH
