@@ -24,7 +24,6 @@ export const handler: Handler = async (
 ): Promise<APIGatewayProxyStructuredResultV2> => {
   try {
     const user = getUser(event);
-    console.log(user.id);
 
     if (!user?.id) {
       return sendUnauthorizedError();
