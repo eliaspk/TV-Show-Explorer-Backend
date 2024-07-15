@@ -1,0 +1,35 @@
+{
+  "name": "tv-show-explorer-backend",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "start": "serverless offline -s dev"
+  },
+  "devDependencies": {
+    "@serverless/typescript": "^3.30.1",
+    "@types/aws-lambda": "^8.10.119",
+    "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "esbuild": "^0.17.19",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "glob": "^10.3.3",
+    "husky": "^8.0.0",
+    "prettier": "^3.0.2",
+    "serverless": "^3.34.0",
+    "serverless-esbuild": "^1.46.0",
+    "serverless-offline": "^12.0.4",
+    "serverless-secrets-plugin": "^0.1.0",
+    "serverless-dotenv-plugin": "^1.1.5",
+    "tsx": "^3.12.7",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
+    "mongodb": "^6.8.0",
+    "moviedb-promise": "^4.0.6"
+  }
+}

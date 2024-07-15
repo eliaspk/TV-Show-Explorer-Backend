@@ -1,0 +1,155 @@
+service: tv-show-explorer
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+
+custom:
+  userPoolStack: ${self:service}-${self:provider.stage}
+  googleAuth: ${ssm:/aws/reference/secretsmanager/googleAuth}
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  versionFunctions: false
+  environment:
+    STAGE: ${self:provider.stage}
+    MONGO_URL: ${env:MONGO_URL}
+    MOVIEDB_API_KEY: ${env:MOVIEDB_API_KEY}
+
+functions:
+  preSignUp:
+    handler: src/lambdas/cognito/preSignup.handler
+    events:
+      - cognitoUserPool:
+          pool: tv-explorer-pool-${self:provider.stage}-1
+          trigger: PreSignUp
+
+  # Shows
+  discoverShows:
+    handler: ./src/lambdas/shows/discover-shows.handler
+    events:
+      - http:
+          path: /api/shows/discover
+          method: GET
+          cors: true
+
+  discoverShowsAuthenticated:
+    handler: ./src/lambdas/shows/discover-shows.handler
+    events:
+      - http:
+          path: /api/auth/shows/discover
+          method: GET
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: !Ref ApiGatewayAuthorizer
+
+  searchShows:
+    handler: src/lambdas/shows/search-shows.handler
+    events:
+      - http:
+          path: /api/shows
+          method: GET
+          cors: true
+
+  searchShowsAuthenticated:
+    handler: src/lambdas/shows/search-shows.handler
+    events:
+      - http:
+          path: /api/auth/shows
+          method: GET
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: !Ref ApiGatewayAuthorizer
+
+  getShowDetails:
+    handler: ./src/lambdas/shows/get-show-details.handler
+    events:
+      - http:
+          path: /api/shows/{id}
+          method: GET
+          cors: true
+
+  getShowSeasons:
+    handler: ./src/lambdas/shows/get-show-seasons.handler
+    events:
+      - http:
+          path: /api/shows/{id}/seasons
+          method: GET
+          cors: true
+
+  getSeasonEpisodes:
+    handler: ./src/lambdas/shows/get-season-episodes.handler
+    events:
+      - http:
+          path: /api/shows/{id}/seasons/{seasonNumber}/episodes
+          method: GET
+
+  ## Favorites
+  addFavorite:
+    handler: src/lambdas/favorites/addFavorite.handler
+    events:
+      - http:
+          path: /api/favorites
+          method: POST
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: !Ref ApiGatewayAuthorizer
+
+  removeFavorite:
+    handler: src/lambdas/favorites/removeFavorite.handler
+    events:
+      - http:
+          path: /api/lambdas/favorites/{id}
+          method: DELETE
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: !Ref ApiGatewayAuthorizer
+
+  getFavorites:
+    handler: src/lambdas/favorites/getFavorites.handler
+    events:
+      - http:
+          path: /api/favorites
+          method: GET
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId: !Ref ApiGatewayAuthorizer
+
+resources:
+  - ${file(./resources/cognito.yml)}
+  - Resources:
+      GatewayResponseDefault4XX:
+        Type: "AWS::ApiGateway::GatewayResponse"
+        Properties:
+          ResponseType: DEFAULT_4XX
+          ResponseParameters:
+            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+            gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          RestApiId: !Ref ApiGatewayRestApi
+      GatewayResponseDefault5XX:
+        Type: "AWS::ApiGateway::GatewayResponse"
+        Properties:
+          ResponseType: DEFAULT_5XX
+          ResponseParameters:
+            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+            gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+          RestApiId: !Ref ApiGatewayRestApi
+      ApiGatewayAuthorizer:
+        Type: AWS::ApiGateway::Authorizer
+        Properties:
+          IdentitySource: method.request.header.Authorization
+          Name: CognitoAuthorizer
+          RestApiId: !Ref ApiGatewayRestApi
+          Type: COGNITO_USER_POOLS
+          ProviderARNs:
+            - !GetAtt TVExplorerCognitoUserPool1.Arn
