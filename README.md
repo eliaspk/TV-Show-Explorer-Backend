@@ -38,11 +38,8 @@ This is the backend for the TV Show Explorer application, which allows users to 
    Create a `.env` file in the root directory and add the following:
 
    ```
-   MONGODB_URI=your_mongodb_connection_string
-   MOVIEDB_API_KEY=your_moviedb_api_key
-   AWS_REGION=your_aws_region
-   COGNITO_USER_POOL_ID=your_cognito_user_pool_id
-   COGNITO_CLIENT_ID=your_cognito_client_id
+   MOVIEDB_API_KEY = Request API Key from https://www.themoviedb.org/
+   MONGO_URL = Mongo db connection url
    ```
 
 4. [Any additional setup steps]
@@ -77,6 +74,8 @@ This project uses the Serverless Framework for deployment to AWS Lambda.
 - `POST /api/favorites`: Add a show to user's favorites
 - `DELETE /api/favorites/{id}`: Remove a show from user's favorites
 - `GET /api/favorites`: Get user's favorite shows
+- `GET /api/auth/shows`: Search shows and checking if in favorites
+- `GET /api/auth/shows/discover`: Discover shows and check if favorite
 
 ## Authentication
 
