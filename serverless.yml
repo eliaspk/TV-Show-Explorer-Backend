@@ -109,7 +109,7 @@ functions:
     handler: src/lambdas/favorites/removeFavorite.handler
     events:
       - http:
-          path: /api/lambdas/favorites/{id}
+          path: /api/favorites/{id}
           method: DELETE
           cors: true
           authorizer:
