@@ -38,6 +38,8 @@ export const handler: Handler = async (
       return sendBadRequestError("ShowId not provided");
     }
 
+    console.log(showId);
+
     await client.connect();
     const database = client.db("tvShowApp");
     const favorites = database.collection<UserFavorites>("favorites");
@@ -45,7 +47,7 @@ export const handler: Handler = async (
     const result = await favorites.updateOne(
       { userId: user.id },
       {
-        $pull: { favorites: { showId: showId } },
+        $pull: { favorites: { showId: Number(showId) } },
       }
     );
 
