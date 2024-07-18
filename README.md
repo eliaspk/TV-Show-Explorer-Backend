@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is the backend for the TV Show Explorer application, which allows users to discover, search, and manage their favorite TV shows. It provides API endpoints for fetching show details, managing user favorites, and handling user authentication.
+This is the backend for the TV Show Explorer webapp. Provides API endpoints for fetching show details, managing user favorites, and handling user authentication.
 
 ## Technologies Used
 
