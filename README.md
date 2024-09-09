@@ -16,7 +16,7 @@ This is the backend for the TV Show Explorer webapp. Provides API endpoints for 
 ## Prerequisites
 
 - Node.js (version 20.13.1)
-- MongoDB instance (local or cloud-based)
+- MongoDB instance
 - AWS Credentials
 
 ## Setup
